@@ -29,7 +29,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/pokemon/pokemonName",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/pokemon/weedle",
       "publishAllPorts": true,
       "useSSL": true
     }

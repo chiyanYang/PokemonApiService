@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PokeAPI;
 
 namespace PokemonApiService.Controllers
@@ -22,7 +24,14 @@ namespace PokemonApiService.Controllers
         [HttpGet]
         public async Task<string> Get(string pokemonName)
         {
-            return pokemonName;
+            PokemonSpecies p = await DataFetcher.GetNamedApiObject<PokemonSpecies>(pokemonName);
+            PokemonDetails pDetails = new PokemonDetails()
+            {
+                Name = p.Name,
+                Description = Array.Find(p.FlavorTexts, element => element.Language.Name == "en").FlavorText
+            };
+
+            return JsonConvert.SerializeObject(pDetails);
         }
     }
 }
