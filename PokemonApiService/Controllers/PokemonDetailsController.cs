@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PokeAPI;
+using PokemonApiService.Clients;
+using RestSharp;
 
 namespace PokemonApiService.Controllers
 {
@@ -25,10 +28,15 @@ namespace PokemonApiService.Controllers
         public async Task<string> Get(string pokemonName)
         {
             PokemonSpecies p = await DataFetcher.GetNamedApiObject<PokemonSpecies>(pokemonName);
+
+            string description = Array.Find(p.FlavorTexts, element => element.Language.Name == "en").FlavorText;
+
+            string translatedDes = await ShakespeareClient.getShakespeareTranslated(description);
+
             PokemonDetails pDetails = new PokemonDetails()
             {
                 Name = p.Name,
-                Description = Array.Find(p.FlavorTexts, element => element.Language.Name == "en").FlavorText
+                Description = translatedDes
             };
 
             return JsonConvert.SerializeObject(pDetails);
