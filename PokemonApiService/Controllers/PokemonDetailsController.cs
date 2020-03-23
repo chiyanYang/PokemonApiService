@@ -16,12 +16,8 @@ namespace PokemonApiService.Controllers
 {
     public class PokemonDetailsController : ControllerBase
     {
-        private readonly ILogger<PokemonDetailsController> _logger;
 
-        public PokemonDetailsController(ILogger<PokemonDetailsController> logger)
-        {
-            _logger = logger;
-        }
+        public PokemonDetailsController() { }
 
         [Route("pokemon/{pokemonName}")]
         [HttpGet]
