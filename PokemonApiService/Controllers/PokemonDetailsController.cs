@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -21,21 +22,61 @@ namespace PokemonApiService.Controllers
 
         [Route("pokemon/{pokemonName}")]
         [HttpGet]
-        public async Task<string> Get(string pokemonName)
+        public async Task<JsonResult> Get(string pokemonName)
         {
-            PokemonSpecies p = await DataFetcher.GetNamedApiObject<PokemonSpecies>(pokemonName);
+            PokemonSpecies p;
 
-            string description = Array.Find(p.FlavorTexts, element => element.Language.Name == "en").FlavorText;
-
-            string translatedDes = await ShakespeareClient.getShakespeareTranslated(description);
-
-            PokemonDetails pDetails = new PokemonDetails()
+            try
             {
-                Name = p.Name,
-                Description = translatedDes
-            };
+                p = await DataFetcher.GetNamedApiObject<PokemonSpecies>(pokemonName);
+            }
+            catch (HttpRequestException ex)
+            {
+                return new JsonResult("Pokemon not found or Pokemon API not available")
+                {
+                    StatusCode = StatusCodes.Status404NotFound
+                };
+            }
+            catch (PokemonParseException ex)
+            {
+                return new JsonResult(ex.Message)
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
 
-            return JsonConvert.SerializeObject(pDetails);
+            try
+            {
+                string description = Array.Find(p.FlavorTexts, element => element.Language.Name == "en").FlavorText;
+
+                string translatedDes = await ShakespeareClient.getShakespeareTranslated(description);
+
+                if (string.IsNullOrEmpty(translatedDes))
+                {
+                    return new JsonResult("Exceed shakespeare API Ratelimit, Please try after a few minutes")
+                    {
+                        StatusCode = StatusCodes.Status429TooManyRequests
+                    };
+                }
+
+                PokemonDetails pDetails = new PokemonDetails()
+                {
+                    Name = p.Name,
+                    Description = translatedDes
+                };
+
+                return new JsonResult(pDetails)
+                {
+                    StatusCode = StatusCodes.Status200OK // Status code here 
+                };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message)
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError // Status code here 
+                };
+            }
         }
     }
 }
