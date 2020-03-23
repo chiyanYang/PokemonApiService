@@ -30,7 +30,7 @@ namespace PokemonApiService.Controllers
             {
                 p = await DataFetcher.GetNamedApiObject<PokemonSpecies>(pokemonName);
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException)
             {
                 return new JsonResult("Pokemon not found or Pokemon API not available")
                 {
