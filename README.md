@@ -12,7 +12,7 @@ Translate pokemon description to Shakespeare-style English
 git clone https://github.com/chiyanYang/PokemonApiService.git
 ```
 
-3. Install Docker [here](https://hub.docker.com/editions/community/docker-ce-desktop-windows).  
+3. Install Docker [here](https://hub.docker.com/editions/community/docker-ce-desktop-windows) and run Docker.    
 4. Open command line and do the following in command line.  
 5. Switch to the project folder where Dockerfile is located, e.g.
 ```
