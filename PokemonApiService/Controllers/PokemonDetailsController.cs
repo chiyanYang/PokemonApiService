@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PokeAPI;
 using PokemonApiService.Clients;
+using PokemonApiService.Models;
 using RestSharp;
 
 namespace PokemonApiService.Controllers
@@ -32,7 +33,7 @@ namespace PokemonApiService.Controllers
             }
             catch (HttpRequestException)
             {
-                return new JsonResult("Pokemon not found or Pokemon API not available")
+                return new JsonResult(ErrorMessage.pokeMonNotFoundOrUnAvailable)
                 {
                     StatusCode = StatusCodes.Status404NotFound
                 };
@@ -53,7 +54,7 @@ namespace PokemonApiService.Controllers
 
                 if (string.IsNullOrEmpty(translatedDes))
                 {
-                    return new JsonResult("Exceed shakespeare API Ratelimit, Please try after a few minutes")
+                    return new JsonResult(ErrorMessage.tooManyRequest)
                     {
                         StatusCode = StatusCodes.Status429TooManyRequests
                     };

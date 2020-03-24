@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PokemonApiService.Models;
 using RestSharp;
 using System;
 using System.Threading;
@@ -27,7 +28,7 @@ namespace PokemonApiService.Clients
 
             if (response.ErrorException != null)
             {
-                const string message = "Unexpected error from Shakespeare API";
+                string message = ErrorMessage.unExpectedShakespeareError;
                 var shakespeareException = new ApplicationException(message, response.ErrorException);
                 throw shakespeareException;
             }
