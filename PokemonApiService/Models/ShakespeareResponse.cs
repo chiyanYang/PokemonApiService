@@ -12,15 +12,15 @@ namespace PokemonApiService
 
     public class ResponseContents
     {
-        public string translated { get; set; }
+        public string Translated { get; set; }
 
-        public string text { get; set; }
+        public string Text { get; set; }
 
-        public string translation { get; set; }
+        public string Translation { get; set; }
     }
 
     public class Status
     {
-        public int total { get; set; }
+        public int Total { get; set; }
     }
 }

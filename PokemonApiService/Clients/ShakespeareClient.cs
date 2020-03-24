@@ -35,7 +35,7 @@ namespace PokemonApiService.Clients
 
             ShakespeareResponse shakespeareResponse = JsonConvert.DeserializeObject<ShakespeareResponse>(response.Content);
 
-            return shakespeareResponse.Contents.translated;
+            return shakespeareResponse.Contents.Translated;
         }
     }
 }
