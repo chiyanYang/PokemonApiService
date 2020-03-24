@@ -67,15 +67,15 @@ namespace LiveTest
         [TestMethod]
         public async Task TestShakespeareApiWhenReachingRateLimiter()
         {
-            const int count = 5;
-            string[] content = new string[count] { "eat", "drink", "run", "play", "work" };
+            const int count = 15;
+            string content = "What he ate made him die.";
 
             for (int i = 0; i < count; i++)
             {
-                await ShakespeareClient.getShakespeareTranslated(content[i]);
+                await ShakespeareClient.getShakespeareTranslated(content);
             }
 
-            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content[0]);
+            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content);
             Assert.AreEqual(translatedContent, string.Empty);
         }
     }
