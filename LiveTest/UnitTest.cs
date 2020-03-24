@@ -5,6 +5,7 @@ using PokeAPI;
 using PokemonApiService;
 using PokemonApiService.Clients;
 using PokemonApiService.Controllers;
+using PokemonApiService.Models;
 using System.Threading.Tasks;
 
 namespace LiveTest
@@ -42,7 +43,7 @@ namespace LiveTest
 
             if (response.StatusCode == StatusCodes.Status429TooManyRequests)
             {
-                Assert.AreEqual(response.Value, "Exceed shakespeare API Ratelimit, Please try after a few minutes");
+                Assert.AreEqual(response.Value, ErrorMessage.tooManyRequest);
             }
             else
             {
@@ -66,15 +67,15 @@ namespace LiveTest
         [TestMethod]
         public async Task TestShakespeareApiWhenReachingRateLimiter()
         {
-            int count = 5;
-            const string content = "You gave Mr. Tim a hearty meal, but unfortunately what he ate made him die.";
+            const int count = 5;
+            string[] content = new string[count] { "eat", "drink", "run", "play", "work" };
 
-            while (count != 0)
+            for (int i = 0; i < count; i++)
             {
-                await ShakespeareClient.getShakespeareTranslated(content);
-                count--;
+                await ShakespeareClient.getShakespeareTranslated(content[i]);
             }
-            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content);
+
+            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content[0]);
             Assert.AreEqual(translatedContent, string.Empty);
         }
     }
