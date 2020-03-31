@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PokemonApiService.Models;
 using RestSharp;
 using System;
@@ -11,7 +13,7 @@ namespace PokemonApiService.Clients
     {
         public readonly static string DefaultSiteURL = "https://api.funtranslations.com/translate/shakespeare.json";
 
-        public static async Task<string> getShakespeareTranslated(string content)
+        public static async Task<JsonResult> getShakespeareTranslated(string content)
         {
             var client = new RestClient("https://api.funtranslations.com/translate/shakespeare.json");
             client.Timeout = -1;
@@ -23,7 +25,10 @@ namespace PokemonApiService.Clients
 
             if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
             {
-                return string.Empty;
+                return new JsonResult(ErrorMessage.tooManyRequest)
+                {
+                    StatusCode = StatusCodes.Status429TooManyRequests
+                };
             }
 
             if (response.ErrorException != null)
@@ -35,7 +40,10 @@ namespace PokemonApiService.Clients
 
             ShakespeareResponse shakespeareResponse = JsonConvert.DeserializeObject<ShakespeareResponse>(response.Content);
 
-            return shakespeareResponse.Contents.Translated;
+            return new JsonResult(shakespeareResponse.Contents.Translated)
+            {
+                StatusCode = StatusCodes.Status200OK // Status code here 
+            };
         }
     }
 }

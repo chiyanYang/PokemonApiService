@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using PokeAPI;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace LiveTest
 {
     [TestClass]
-    public class UnitTest
+    public class IntegrationTest
     {
         const string pokemonName = "weedle";
 
@@ -27,10 +28,10 @@ namespace LiveTest
         public async Task TestShakespeareApi()
         {
             const string content = "You gave Mr. Tim a hearty meal, but unfortunately what he ate made him die.";
-            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content);
+            JsonResult shakespeareResult = await ShakespeareClient.getShakespeareTranslated(content);
 
-            Assert.IsNotNull(translatedContent);
-            Assert.AreEqual(translatedContent, "Thee did giveth mr. Tim a hearty meal,  but unfortunately what he did doth englut did maketh him kicketh the bucket.");
+            Assert.IsNotNull(shakespeareResult);
+            Assert.AreEqual(shakespeareResult.Value.ToString(), "Thee did giveth mr. Tim a hearty meal,  but unfortunately what he did doth englut did maketh him kicketh the bucket.");
         }
 
         [TestMethod]
@@ -75,8 +76,8 @@ namespace LiveTest
                 await ShakespeareClient.getShakespeareTranslated(content);
             }
 
-            string translatedContent = await ShakespeareClient.getShakespeareTranslated(content);
-            Assert.AreEqual(translatedContent, string.Empty);
+            JsonResult shakespeareResult = await ShakespeareClient.getShakespeareTranslated(content);
+            Assert.AreEqual(shakespeareResult.StatusCode, StatusCodes.Status429TooManyRequests);
         }
     }
 }
